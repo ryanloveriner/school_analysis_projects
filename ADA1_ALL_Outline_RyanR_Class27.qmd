@@ -1,0 +1,2564 @@
+---
+title:    "ADA1: Cumulative project file"
+subtitle: "How Drink Dependency Correlates to Depression and Mania"
+author:   Ryan Riner
+date:     last-modified
+description: |
+  [Advanced Data Analysis 1](https://StatAcumen.com/teach/ada1),
+  Stat 427/527, Fall 2022, Prof. Erik Erhardt, UNM
+format:
+  html:
+    theme:            litera
+    highlight-style:  atom-one
+    page-layout:      full  # article, full   # https://quarto.org/docs/output-formats/page-layout.html
+    toc:              true
+    toc-depth:        5
+    toc-location:     body  # body, left, right
+    number-sections:  true
+    number-depth:     5
+    self-contained:         false     # !!! this can cause a render error
+    code-overflow:          wrap    # scroll, wrap
+    code-block-bg:          true
+    code-block-border-left: "#30B0E0"
+    code-copy:              false     # true, false, hover a copy buttom in top-right of code block
+    cite-method:      citeproc
+    citations-hover:  true
+fig-width:            6
+fig-height:           4
+execute: # https://quarto.org/docs/computations/execution-options.html, https://quarto.org/docs/computations/r.html
+  cache:  true   # false, true
+  eval:   true    # true, false  Evaluate the code chunk (if false, just echos the code into the output).
+  echo:   true    # true, false  Include the source code in output
+bibliography: ADA1_proj.bib
+---
+
+<!---
+Commenting text:
+  Note that in Markdown you can comment text similar to standard HTML tags.
+  This text won't show in the document
+    because it is between "start" and "end" comment tags.
+-->
+
+----------------------------------------
+
+# Document overview
+
+:::{.callout-important}
+Please don't let the initial size and detail of this document intimidate you.
+You got this!
+:::
+
+This document is organized by Week and Class number.
+The worksheet assignments are indicated by the Class numbers.
+
+Consider your readers (graders):
+
+  * organize the document clearly (use this document as an example)
+  * label minor sections under each day (use this document as an example)
+  * For each thing you do, always have these three parts:
+    1. Say what you're going to do and why.
+    2. Do it with code, and document your code.
+    3. Interpret the results.
+
+## Document
+
+### Naming
+
+:::{.callout-note}
+Each class save this file with a new name,
+updating the last two digits to the class number.
+Then, you'll have a record of your progress,
+as well as which files you turned in for grading.
+:::
+
+* `ADA1_ALL_05.qmd`
+* `ADA1_ALL_06.qmd`
+* `ADA1_ALL_07.qmd` ...
+
+A version that I prefer is to use a date using Year-Month-Day, `YYYYMMDD`:
+
+* `ADA1_ALL_20220903.qmd`
+* `ADA1_ALL_20220905.qmd`
+* `ADA1_ALL_20220910.qmd` ...
+
+
+### Structure
+
+We will include all of our assignments together in this document to retain the
+  relevant information needed for subsequent assignments since our analysis is cumulative.
+You will also have an opportunity to revisit previous parts to make changes or improvements,
+  such as updating your codebook, recoding variables, and improving tables and plots.
+I've provided an initial predicted organization of our
+  sections and subsections using the \# and \#\# symbols.
+A table of contents is automatically generated using the "toc: true" in the yaml
+  and can headings in the table of contents are clickable to jump down
+  to each (sub)section.
+
+
+### Classes not appearing in this document
+
+Some assignments are in a separate worksheet and are indicated with "(separate worksheet)".
+For these, I'll provide a dataset I want you to analyze.
+Typically, you'll then return to this document and repeat the same type of analysis with your dataset.
+
+----------------------------------------
+
+# Research Questions
+
+## Class 02, Personal Codebook
+
+__Rubric__
+
+1. (1 p) Is there a topic of interest?
+
+2. (2 p) Are the variables relevant to a set of research questions?
+
+3. (4 p) Are there at least 2 categorical and 2 numerical variables (at least 4 "data" variables)?
+    * 1 categorical variable with only 2 levels
+    * 1 categorical variable with at least 3 levels
+    * 2 numerical variables with many possible unique values
+    * More variables are welcome and you're likely to add to this later in the semester
+
+4. (3 p) For each variable, is there a variable description, a data type, and coded value descriptions?
+
+5. Compile this qmd file to an html, print/save to pdf, and upload to UNM Canvas.
+
+### Topic and research questions
+
+**Topic:**
+
+Heavy alcohol use and its respective relationships to manic and depressive symptoms.
+
+**Research questions:**
+
+1. Do depressive symptoms (Depression) predict heavy drinking (DrinkExperience/DrinkQuantity/DrinkDependence)?
+
+2. Do manic symptoms (Mania) predict heavy drinking (DrinkExperience/DrinkQuantity/DrinkDependence)?
+
+3. Is there an income bracket (Income) with higher correlations between heavy drinking and mania or depression?
+
+# Codebook
+
+National Epidemiologic Survey on Alcohol and Related Conditions-III (NESARC-III)
+
+* Codebook: https://statacumen.com/teach/ADA1/PDS_data/NESARC_W1_CodeBook.pdf
+* Official site: https://www.niaaa.nih.gov/research/nesarc-iii
+* Introduction: https://pubs.niaaa.nih.gov/publications/arh29-2/74-78.htm
+
+```
+Dataset: NESARC
+Primary association: alcohol abuse and manic/depressive disorders
+
+Key:
+RenamedVarName
+  VarName original in dataset
+  Variable description
+  Data type (Continuous, Discrete, Nominal, Ordinal)
+  Frequency ItemValue Description
+
+ID
+  IDNUM
+  UNIQUE ID NUMBER WITH NO ALPHABETICS
+  Nominal
+  43093 1-43093. Unique Identification number
+
+Sex
+  SEX
+  SEX
+  Nominal
+  18518 1. Male
+  24575 2. Female
+
+Age
+  AGE
+  AGE
+  Continuous
+  43079 18-97. Age in years
+     14 98. 98 years or older
+
+Income
+  S1Q11B
+  TOTAL FAMILY INCOME IN LAST 12 MONTHS
+  Categorical
+  1718 1.  Less than $5,000
+  2338 2.  $5,000 to $7,999
+  1373 3.  $8,000 to $9,999
+  2559 4.  $10,000 to $12,999
+  1343 5.  $13,000 to $14,999
+  3317 6.  $15,000 to $19,999
+  3368 7.  $20,000 to $24,999
+  2941 8.  $25,000 to $29,999
+  3052 9.  $30,000 to $34,999
+  2565 10. $35,000 to $39,999
+  4301 11. $40,000 to $49,999
+  3428 12. $50,000 to $59,999
+  2644 13. $60,000 to $69,999
+  2008 14. $70,000 to $79,999
+  1363 15. $80,000 to $89,999
+  977  16. $90,000 to $99,999
+  1130 17. $100,000 to $109,999
+  428  18. $110,000 to $119,999
+  914  19. $120,000 to $149,999
+  725  20. $150,000 to 199,999
+  601  21. $200,000 or more
+
+DrinkExperience
+  S2AQ20
+  DURATION (YEARS) OF PERIOD OF HEAVIEST DRINKING
+  Continuous
+  33377 1-80. Number of years
+  1450 99. Unknown
+  8266 BL. NA, lifetime abstainer
+  
+DrinkQuantity
+  S2AQ21B
+  NUMBER OF DRINKS OF ANY ALCOHOL USUALLY CONSUMED ON DAYS WHEN DRANK ALCOHOL
+  DURING PERIOD OF HEAVIEST DRINKING
+  Discrete
+  33683 1-98. Number of drinks
+  1144 99. Unknown
+  8266 BL. NA, lifetime abstainer
+  
+DrinkDependence
+  S2BQ1A4
+  EVER INCREASE DRINKING BECAUSE AMOUNT FORMERLY CONSUMED NO LONGER
+  GAVE DESIRED EFFECT
+  Categorical
+  3048 1. Yes
+  31467 2. No
+  312 9. Unknown
+  8266 BL. NA, lifetime abstainer
+  
+Depression
+  S4AQ1
+  EVER HAD 2-WEEK PERIOD WHEN FELT SAD, BLUE, DEPRESSED, OR DOWN MOST OF TIME
+  Categorical
+  12785 1. Yes
+  29416 2. No
+  892 9. Unknown
+  
+Mania
+  S5Q3
+  HAD 1+ WEEK PERIOD IRRITABLE/EASILY ANNOYED THAT CAUSED YOU TO SHOUT/BREAK
+  THINGS/START FIGHTS OR ARGUMENTS
+  Categorical
+  3402 1. Yes
+  38620 2. No
+  1071 9. Unknown
+
+```
+
+Additional variables were created from the original variables:
+```
+CREATED VARIABLES
+
+Height_inches
+  Total height in inches
+  Height_ft * 12 + Height_in
+
+
+ADD MORE HERE
+ADD MORE HERE
+ADD MORE HERE
+ADD MORE HERE (If you think you'll combine or transform any variables)
+ADD MORE HERE
+ADD MORE HERE
+ADD MORE HERE
+
+```
+
+
+----------------------------------------
+
+# Data Management
+
+
+## Class 03, Data subset and numerical summaries
+
+__Rubric__
+
+1. (4 p) The data are loaded and a data.frame subset is created by selecting only the variables in the personal codebook.
+    * Scroll down to sections labeled "(Class 03)".
+
+2. (1 p) Output confirms the subset is correct (e.g., using `dim()` and `str()`).
+
+3. (3 p) Rename your variables to descriptive names (e.g., from "S3AQ3B1" to "SmokingFreq").
+    * Scroll down to sections labeled "(Class 03)".
+
+4. (2 p) Provide numerical summaries for all variables (e.g., using `summary()`).
+    * Scroll down to sections labeled "(Class 03)".
+
+
+### Data subset (Class 03)
+
+First, the data is placed on the search path.
+```{R}
+#| cache: false
+
+# data analysis packages
+library(erikmisc)   # Helpful functions
+library(tidyverse)  # Data manipulation and visualization suite
+library(lubridate)  # Dates
+
+  ## 1. Download the ".RData" file for your dataset into your ADA Folder.
+  ## 2. Use the load() statement for the dataset you want to use.
+# read data example
+#load("NESARC.RData")
+
+#dim(NESARC)
+
+```
+
+```{R}
+
+load("NESARC.RData")
+dim(NESARC)
+
+```
+
+
+
+### Renaming Variables (Class 03)
+```{R}
+
+nesarc_sub <-
+  NESARC %>%
+  dplyr::select(
+    IDNUM
+  , SEX
+  , AGE
+  , S1Q11B
+  , S2AQ20
+  , S2AQ21B
+  , S2BQ1A4
+  , S4AQ1
+  , S5Q3
+  , ETHRACE2A
+  , S2AQ22
+  )
+
+dim(nesarc_sub)
+str(nesarc_sub)
+
+```
+```{R}
+
+nesarc_sub <-
+  nesarc_sub %>%
+  dplyr::rename(
+    ID                = IDNUM
+  , Sex               = SEX
+  , Age               = AGE
+  , Income            = S1Q11B
+  , DrinkExperience   = S2AQ20
+  , DrinkQuantity     = S2AQ21B
+  , DrinkDependence   = S2BQ1A4
+  , Depression        = S4AQ1
+  , Mania             = S5Q3
+  , Ethnicity         = ETHRACE2A
+  )
+
+summary(nesarc_sub)
+
+```
+
+
+
+### Coding missing values (Class 04)
+
+There are two steps.
+The first step is to recode any existing `NA`s to actual values, if necessary.
+The method for doing this differs for numeric and categorical variables.
+The second step is to recode any coded missing values, such as 9s or 99s, as actual `NA`.
+
+#### Coding `NA`s as meaningful "missing"
+
+First step: the existing blank values with `NA` mean "never",
+  and "never" has a meaning different from "missing".
+For each variable we need to decide what "never" means
+  and code it appropriately.
+
+##### `NA`s recoded as numeric
+
+```{R}
+
+table(nesarc_sub$DrinkExperience)
+
+nesarc_sub <-
+  nesarc_sub %>%
+  replace_na(
+    list(
+      DrinkExperience = 0
+    )
+  )
+
+table(nesarc_sub$DrinkExperience)
+
+```
+
+```{R}
+
+table(nesarc_sub$DrinkQuantity)
+
+nesarc_sub <-
+  nesarc_sub %>%
+  replace_na(
+    list(
+      DrinkQuantity = 0
+    )
+  )
+
+table(nesarc_sub$DrinkQuantity)
+
+```
+
+##### `NA`s recoded as categorical
+
+```{R}
+
+table(nesarc_sub$DrinkDependence)
+
+nesarc_sub <-
+  nesarc_sub %>%
+  mutate(
+    DrinkDependence = as.character(DrinkDependence)
+  ) %>%
+  replace_na(
+    list(
+      DrinkDependence = "3"
+    )
+  )
+
+table(nesarc_sub$DrinkDependence)
+
+```
+  
+#### Coding 9s and 99s as `NA`s
+
+```{R}
+
+nesarc_sub <-
+  nesarc_sub %>%
+  mutate(
+      DrinkExperience  = replace(DrinkExperience,  DrinkExperience  %in% c( 99), NA)
+    , DrinkQuantity    = replace(DrinkQuantity,    DrinkQuantity    %in% c( 99), NA)
+    , DrinkDependence  = replace(DrinkDependence,  DrinkDependence  %in% c("9"),  NA)
+    , Depression       = replace(Depression,       Depression       %in% c("9"), NA)
+    , Mania            = replace(Mania,            Mania            %in% c("9"), NA)
+  )
+
+summary(nesarc_sub)
+
+```
+
+### Labeling Categorical variable levels (Class 04)
+
+```{R}
+
+summary(nesarc_sub)
+
+nesarc_sub$Sex <-
+  factor(
+    nesarc_sub$Sex
+    , labels = c("Male"
+               , "Female"
+               )
+  )
+
+nesarc_sub$DrinkDependence <-
+  factor(
+    nesarc_sub$DrinkDependence
+    , labels = c("Yes Dependence Symptoms"
+               , "No Dependence Symptoms"
+               , "Unsure Dependence Symptoms"
+               )
+  )
+
+nesarc_sub$Depression <-
+  factor(
+    nesarc_sub$Depression
+    , labels = c("Yes Depression"
+               , "No Depression"
+               )
+  )
+
+nesarc_sub$Mania <-
+  factor(
+    nesarc_sub$Mania
+    , labels = c("Yes Manic Symptoms"
+               , "No Manic Symptoms"
+               )
+  )
+
+nesarc_sub$Ethnicity <-
+  factor(
+    nesarc_sub$Ethnicity
+    , levels = c( 1
+                , 2
+                , 3
+                , 4
+                , 5
+                )
+    , labels = c( "Cauc"
+                , "AfAm"
+                , "NaAm"
+                , "Asia"
+                , "Hisp")
+  )
+
+
+nesarc_sub$Income <-
+  factor(nesarc_sub$Income
+        , levels = c( 1
+                    , 2
+                    , 3
+                    , 4
+                    , 5
+                    , 6
+                    , 7
+                    , 8
+                    , 9
+                    , 10
+                    , 11
+                    , 12
+                    , 13
+                    , 14
+                    , 15
+                    , 16
+                    , 17
+                    , 18
+                    , 19
+                    , 20
+                    , 21
+                   )
+        , labels = c("Less than $5,000"
+                    , "$5,000 to $7,999"
+                    , "$8,000 to $9,999"
+                    , "$10,000 to $12,999"
+                    , "$13,000 to $14,999"
+                    , "$15,000 to $19,999"
+                    , "$20,000 to $24,999"
+                    , "$25,000 to $29,999"
+                    , "$30,000 to $34,999"
+                    , "$35,000 to $39,999"
+                    , "$40,000 to $49,999"
+                    , "$50,000 to $59,999"
+                    , "$60,000 to $69,999"
+                    , "$70,000 to $79,999"
+                    , "$80,000 to $89,999"
+                    , "$90,000 to $99,999"
+                    , "$100,000 to $109,999"
+                    , "$110,000 to $119,999"
+                    , "$120,000 to $149,999"
+                    , "$150,000 to 199,999"
+                    , "$200,000 or more"
+                    )
+  )
+
+
+summary(nesarc_sub)
+
+```
+
+
+### Creating new variables (Class 04+)
+
+```{R}
+
+nesarc_sub <-
+  nesarc_sub %>%
+  mutate(
+    Age_log = log(Age)
+  )
+
+```
+
+```{R}
+
+nesarc_sub <-
+  nesarc_sub %>%
+  mutate(
+    DrinkQuantity_Drinkers = ifelse(DrinkQuantity > 1, DrinkQuantity, NA)
+  , DrinkQuantity_Drinkers_log2 = log2(DrinkQuantity_Drinkers)
+  )
+
+```
+
+
+
+
+#### From categories to numeric
+
+```{R}
+
+nesarc_sub <-
+  nesarc_sub %>%
+  mutate(
+    Average_Earnings =
+      case_when(
+        Income == 1  ~ 5000                               # 1.  Less than $5,000
+      , Income == 2  ~ (((7999 - 5000)     / 2) + 5000)   # 2.  $5,000 to $7,999
+      , Income == 3  ~ (((9999 - 8000)     / 2) + 8000)   # 3.  $8,000 to $9,999
+      , Income == 4  ~ (((12999 - 10000)   / 2) + 10000)  # 4.  $10,000 to $12,999
+      , Income == 5  ~ (((14999 - 13000)   / 2) + 13000)  # 5.  $13,000 to $14,999
+      , Income == 6  ~ (((19999 - 15000)   / 2) + 15000)  # 6.  $15,000 to $19,999
+      , Income == 7  ~ (((24999 - 20000)   / 2) + 20000)  # 7.  $20,000 to $24,999
+      , Income == 8  ~ (((29999 - 25000)   / 2) + 25000)  # 8.  $25,000 to $29,999
+      , Income == 9  ~ (((34999 - 30000)   / 2) + 30000)  # 9.  $30,000 to $34,999
+      , Income == 10 ~ (((39999 - 35000)   / 2) + 35000)  # 10. $35,000 to $39,999
+      , Income == 11 ~ (((49999 - 40000)   / 2) + 40000)  # 11. $40,000 to $49,999
+      , Income == 12 ~ (((59999 - 50000)   / 2) + 50000)  # 12. $50,000 to $59,999
+      , Income == 13 ~ (((69999 - 60000)   / 2) + 60000)  # 13. $60,000 to $69,999
+      , Income == 14 ~ (((79999 - 70000)   / 2) + 70000)  # 14. $70,000 to $79,999
+      , Income == 15 ~ (((89999 - 80000)   / 2) + 80000)  # 15. $80,000 to $89,999
+      , Income == 16 ~ (((99999 - 90000)   / 2) + 90000)  # 16. $90,000 to $99,999
+      , Income == 17 ~ (((100000 - 109999) / 2) + 100000) # 17. $100,000 to $109,999
+      , Income == 18 ~ (((119999 - 110000) / 2) + 110000) # 18. $110,000 to $119,999
+      , Income == 19 ~ (((149999 - 120000) / 2) + 120000) # 19. $120,000 to $149,999
+      , Income == 20 ~ (((199999 - 150000) / 2) + 150000) # 20. $150,000 to 199,999
+      , Income == 21 ~ 200000                             # 21. $200,000 or more
+      )
+  )
+
+summary(nesarc_sub$Average_Earnings)
+
+```
+
+
+
+#### From numeric to numeric
+
+`Intoxication_Units` is the approximation of intoxicating quantities of alcohol consumed, derived form `DrinkQuantity`. This is the average number of drinks across men and women that produces a blood alcohol content of .08, legally recognized as a state of intoxication.
+
+```{R}
+
+nesarc_sub <-
+  nesarc_sub %>%
+  mutate(
+    Intoxication_Units = (DrinkQuantity / 3)
+  )
+
+summary(nesarc_sub$Intoxication_Units)
+
+```
+
+
+#### From numeric to categories based on quantiles
+
+`Heavy_Drinking` categorizes the longest period of heavy drinking reported, derived from `DrinkExperience`.
+
+```{R}
+
+nesarc_sub <-
+  nesarc_sub %>%
+  mutate(
+    Heavy_Drinking =
+      case_when(
+        DrinkExperience == 0                              ~ "No Heavy Drinking"
+      , (DrinkExperience > 0)  & (DrinkExperience <= 5)   ~ "Short Heavy Drinking Period (5 years or less)"
+      , (DrinkExperience > 5)  & (DrinkExperience <= 20)  ~ "Notable Heavy Drinking Period (5 to 20 years)"
+      , (DrinkExperience > 20) & (DrinkExperience <= 40)  ~ "Extended Heavy Drinking Period (20 to 40 years)"
+      , (DrinkExperience > 40)                            ~ "Lifetime Drinker (40 years or more)"
+      )
+    , Heavy_Drinking =
+      factor(
+        Heavy_Drinking
+        , levels = c(
+            "No Heavy Drinking"
+          , "Short Heavy Drinking Period (5 years or less)"
+          , "Notable Heavy Drinking Period (5 to 20 years)"
+          , "Extended Heavy Drinking Period (20 to 40 years)"
+          , "Lifetime Drinker (40 years or more)"
+        )
+      )
+  )
+
+summary(nesarc_sub$Heavy_Drinking)
+table(nesarc_sub$Heavy_Drinking)
+
+```
+
+
+
+#### From many categories to a few
+
+
+
+#### Working with Dates
+
+
+
+#### Review results of new variables
+
+
+
+### Data subset rows
+
+
+
+## Data is complete (Class 04)
+
+### Plot entire dataset, show missing values
+
+
+
+### Numerical summaries to assess correctness (Class 03)
+
+
+
+--------------------------------------------------------------------------------
+
+# Graphing and Tabulating
+
+## Class 04, Plotting univariate
+
+__Rubric__
+
+1. (3 p) For one categorical variable, a barplot is plotted with axis labels and a title.
+  Interpret the plot: describe the relationship between categories you observe.
+
+2. (3 p) For one numerical variable, a histogram or boxplot is plotted with axis labels and a title.
+  Interpret the plot: describe the distribution (shape, center, spread, outliers).
+
+3. (2 p) Code missing variables, remove records with missing values,
+  indicate with R output that this was done correctly (e.g., `str()`, `dim()`, `summary()`).
+    * Scroll up to sections labeled "(Class 04)".
+
+4. (2 p) Label levels of factor variables.
+    * Scroll up to sections labeled "(Class 04)".
+
+
+
+## Categorical variables
+
+### Tables for categorical variables
+
+```{R}
+table(nesarc_sub$DrinkDependence)
+table(nesarc_sub$DrinkDependence) %>% prop.table()
+
+```
+
+
+
+### Graphing frequency tables
+
+```{R}
+
+library(ggplot2)
+pl <- ggplot(data = nesarc_sub, aes(x = DrinkDependence))
+pl <- pl + geom_bar()
+pl <- pl + labs(x    = ""
+              , y  = "Total Number"
+              , title = "Alcohol Dependence"
+              )
+print(pl)
+
+```
+
+**Interpretation:** There are far fewer (9%) participants that reported increasing the amount they drank to achieve their desired effect than those who did not (90%).
+
+
+
+## Numeric variables
+
+### Graphing numeric variables
+
+```{R}
+
+library(ggplot2)
+p <- ggplot(data = nesarc_sub, aes(x = DrinkQuantity))
+p <- p + theme_bw()
+p <- p + geom_histogram(aes(y = ..density..), boundary = 0, binwidth = 2)
+#p <- p + geom_rug()
+p <- p + geom_density(alpha = 0.2, fill = "gray50", adjust = 7)
+p <- p + labs(x = "Estimated Drinks Per Day"
+            , y = "Density"
+            , title = "Daily Drink Count During Heaviest Drinking Period"
+            )
+print(p)
+
+summary(nesarc_sub$DrinkQuantity)
+
+```
+**Interpretation:** Most participants (about 44%) consumed 1-6 drinks per day during their period of heaviest drinking. Few participants (about 5%) consumed 6-12 drinks per day during their period of heaviest drinking.
+
+### Creating Density Plots
+
+
+
+
+
+----------------------------------------
+
+## Class 05-1, Plotting bivariate, numeric response
+
+__Rubric__
+
+1. Each of the following (2 p for plot, 2 p for labelled axes and title, 1 p for interpretation):
+
+    1. Scatter plot (for regression): $x$ = numerical, $y$ = numerical, include axis labels and a title.
+      Interpret the plot: describe the relationship.
+
+    2. Box plots (for ANOVA): $x$ = categorical, $y$ = numerical, include axis labels and a title.
+      Interpret the plot: describe the relationship.
+
+
+### Scatter plot (for regression): x = numerical, y = numerical
+
+**Interpretation:** There are two distinct relationships between `Age` and `DrinkExperience` among those who drink. One correlation is nearly 0, probably representing those whose heaviest drinking period was in college (4-10 years). The other correlation is nearly 1, probably representing those who have spent their whole lives drinking heavily. The former relationship dominates the linear regression.
+
+```{R}
+
+library(ggplot2)
+p <- ggplot(nesarc_sub %>% filter(DrinkExperience > 0), aes(x = Age, y = DrinkExperience))
+p <- p + theme_bw()
+p <- p + geom_jitter(width = 0.25, height = 5, alpha = 1/10)
+p <- p + stat_smooth(method = lm, colour = "red")
+p <- p + labs(
+     title = "Length of Heaviest Drinking Period vs Age"
+   , y = "Length in Years of Heaviest Drinking Period"
+   , caption = "Key: Red line is simple linear regression.\nFiltered to include only drinkers."
+   )
+print(p)
+
+```
+
+
+### Box plots (for ANOVA): x = categorical, y = numerical
+
+**Interpretation** There is very little difference in the number of drinks consumed per day between those reporting depressive symptoms and those reporting no depressive symptoms.
+
+```{R}
+
+library(ggplot2)
+p <- ggplot(nesarc_sub %>% filter(DrinkQuantity > 0), aes(x = Depression, y = DrinkQuantity))
+p <- p + theme_bw()
+p <- p + geom_boxplot(width = 0.5, alpha = 0.5)
+p <- p + geom_jitter(position = position_jitter(width = 0.1), alpha = 1/100)
+p <- p + stat_summary(fun = mean, geom = "point", shape = 18, size = 6,
+                      colour = "red", alpha = 0.8)
+p <- p + labs(
+              title = "Heavy Drinking Periods by Depression"
+            , x = "Symptoms of Depression"
+            , y = "Number of Drinks per Day During Heaviest Drinking Period"
+            , caption = "Red diamond is the mean.\nFiltered to include only drinkers"
+)
+
+print(p)
+
+```
+
+
+
+## Class 05-2, Plotting bivariate, categorical response
+
+__Rubric__
+
+1. Each of the following (2 p for plot, 2 p for labelled axes and title, 1 p for interpretation):
+
+    1. Mosaic plot or bivariate bar plots (for contingency tables): $x$ = categorical, $y$ = categorical,  include axis labels and a title.
+      Interpret the plot: describe the relationship.
+
+    2. Logistic scatter plot (for logistic regression): $x$ = numerical, $y$ = categorical (binary), include axis labels and a title.
+      Interpret the plot: describe the relationship.
+
+
+### Mosaic plot or bivariate bar plots (for contingency tables): x = categorical, y = categorical
+
+
+```{R}
+
+tab_dep_alc <-
+  nesarc_sub %>%
+  group_by(
+    Depression, DrinkDependence
+  ) %>%
+  summarize(
+    n = n()
+  ) %>%
+  mutate(
+    prop = round(n / sum(n), 3)
+  ) %>%
+  ungroup() %>%
+  na.omit()
+
+tab_dep_alc
+
+tab_dep_alc <-
+  nesarc_sub %>%
+  group_by(
+    DrinkDependence, Depression
+  ) %>%
+  summarize(
+    n = n()
+  ) %>%
+  mutate(
+    prop = round(n / sum(n), 3)
+  ) %>%
+  ungroup() %>%
+  na.omit()
+
+tab_dep_alc
+
+library(ggplot2)
+p <- ggplot(data = nesarc_sub, aes(x = Depression, fill = forcats::fct_rev(DrinkDependence)))
+p <- p + theme_bw()
+p <- p + geom_bar(position = "fill")
+p <- p + labs(x = "Depression Status"
+            , y = "Proportion"
+            , title = "Proportion of Drinkers with and without\nalcohol dependence by depression status"
+            )
+p <- p + scale_fill_discrete(name = "Alcohol Dependence\nStatus")
+
+print(p)
+
+```
+
+**Interpretation:** Those who exhibit symptoms of depression are about twice as likely to exhibit symptoms of alcohol dependence (10.7%) as those without symptoms of depression (5.5%).
+
+
+### Logistic scatter plot (for logistic regression): x = numerical, y = categorical (binary)
+
+
+```{R}
+
+table(nesarc_sub$DrinkDependence)
+
+nesarc_sub$DrinkDependence01 <- ifelse(nesarc_sub$DrinkDependence == "Yes Dependence Symptoms", 1, 0)
+
+table(nesarc_sub$DrinkDependence01)
+
+```
+
+```{R}
+
+library(ggplot2)
+p <- ggplot(nesarc_sub, aes(x = DrinkQuantity, y = DrinkDependence01))
+p <- p + theme_bw()
+p<- p + geom_jitter(position = position_jitter(height = 0.1), alpha = 1/4)
+
+binomial_smooth <- function(...) {
+  geom_smooth(method = "glm", method.args = list(family = "binomial"), ...)
+}
+p <- p + binomial_smooth()
+p <- p + scale_y_continuous(breaks = seq(0, 1, by=0.2), minor_breaks = seq(0, 1, by=0.1))
+p <- p + labs(x = "Drinks Per Day"
+            , y = "Alcohol Dependence Symptoms (1=Yes, 0=No or Unsure"
+            , title = "Likelihood of Alcohol Dependence\nincreases with number of drinks per day"
+            )
+
+print(p)
+
+```
+
+**Interpretation:** The likelihood of exhibiting symptoms of alcohol dependence increases with the number of drinks consumed per day.
+
+
+## Class 06, Figure arrangement, captions, cross-referencing
+
+__Rubric__
+
+1. Reorganize your Class 05 bivariate plots above using `plot_grid()` and `quarto`, creating captions and cross-referencing them from the text.
+
+    1. (3 p) For your numeric response plots, use `cowplot::plot_grid()` to create a single figure with separate plot panels.
+
+    2. (3 p) For your categorical response plots, use quarto chunk options `fig-cap`, `fig-subcap`, and `layout-ncol` to create a single figure with separate plot panels.
+
+    3. (2 p) Use captions to describe (not interpret) both sets of plots so a reader understands what is being plotted.
+
+    4. (2 p) Use cross-referencing from the text to refer to the plots when you interpret them.
+
+
+:::{.callout-note}
+Go above and reformat your plots and update your interpretations with cross-referencing.
+:::
+
+### Scatter plot (for regression): x = numerical, y = numerical
+
+```{R}
+
+library(ggplot2)
+p <- ggplot(nesarc_sub %>% filter(DrinkExperience > 0), aes(x = Age, y = DrinkExperience))
+p <- p + theme_bw()
+p <- p + geom_jitter(width = 0.25, height = 5, alpha = 1/10)
+p <- p + stat_smooth(method = lm, colour = "red")
+p <- p + labs(
+     title = "Heavy Drinking vs Age"
+   , y = "Length in Years of Heaviest Drinking Period"
+   , caption = "Key: Red line is simple linear regression.\nFiltered to include only drinkers."
+   )
+
+p1 <- p
+
+```
+
+### Box plots (for ANOVA): x = categorical, y = numerical
+
+```{R}
+
+library(ggplot2)
+p <- ggplot(nesarc_sub %>% filter(DrinkQuantity > 0), aes(x = Depression, y = DrinkQuantity))
+p <- p + theme_bw()
+p <- p + geom_boxplot(width = 0.5, alpha = 0.5)
+p <- p + geom_jitter(position = position_jitter(width = 0.1), alpha = 1/100)
+p <- p + stat_summary(fun = mean, geom = "point", shape = 18, size = 6,
+                      colour = "red", alpha = 0.8)
+p <- p + labs(
+              title = "Heavy Drinking by Depression"
+            , x = "Symptoms of Depression"
+            , y = "Drinks per Day During Heaviest Drinking Period"
+            , caption = "Red diamond is the mean.\nFiltered to include only drinkers"
+)
+
+p2 <- p
+
+```
+
+
+```{R}
+#| label: fig-bivariate-plots-num
+#| fig-cap: Numeric response bivariate plots. (A) Heavy Drinking vs Age.  (B) Heavy Drinking by Depression
+#| fig-width:   9
+#| fig-height:  7
+
+p_arranged <-
+  cowplot::plot_grid(
+      plotlist = list(p1, p2)
+    , nrow   = 1
+    , ncol   = NULL
+    , labels = "AUTO"
+  )
+
+print(p_arranged)
+
+```
+
+**Interpretation:**
+
+In @fig-bivariate-plots-num A,
+the relationship between `Age` and `DrinkExperience` is distinctly positive.
+
+In @fig-bivariate-plots-num B,
+there is little correlation between `DrinkQuantity` and `Depression`.
+
+
+```{R}
+#| label: fig-bivariate-plots-cat
+#| fig-cap: Categorical response bivariate plots.
+#| fig-subcap:
+#|   - "Proportion of Drinkers with and without\nalcohol dependence by depression status"
+#|   - "Likelihood of Alcohol Dependence\nincreases with number of drinks per day"
+#| layout-ncol: 1
+#| fig-width:   5
+#| fig-height:  3
+
+# Mosaic plot or bivariate bar plots (for contingency tables): x = categorical, y = categorical
+
+library(ggplot2)
+p <- ggplot(data = nesarc_sub, aes(x = Depression, fill = forcats::fct_rev(DrinkDependence)))
+p <- p + theme_bw()
+p <- p + geom_bar(position = "fill")
+p <- p + labs(x = "Depression Status"
+            , y = "Proportion"
+            , title = "Proportion of Drinkers with and without\nalcohol dependence by depression status"
+            )
+p <- p + scale_fill_discrete(name = "Alcohol Dependence\nStatus")
+print(p)
+
+# Logistic scatter plot (for logistic regression): x = numerical, y = categorical (binary)
+
+library(ggplot2)
+p <- ggplot(nesarc_sub, aes(x = DrinkQuantity, y = DrinkDependence01))
+p <- p + theme_bw()
+p<- p + geom_jitter(position = position_jitter(height = 0.1), alpha = 1/4)
+
+binomial_smooth <- function(...) {
+  geom_smooth(method = "glm", method.args = list(family = "binomial"), ...)
+}
+p <- p + binomial_smooth()
+p <- p + scale_y_continuous(breaks = seq(0, 1, by=0.2), minor_breaks = seq(0, 1, by=0.1))
+p <- p + labs(x = "Drinks Per Day"
+            , y = "Alcohol Dependence Symptoms (1=Yes, 0=No or Unsure"
+            , title = "Likelihood of Alcohol Dependence\nincreases with number of drinks per day"
+            )
+print(p)
+
+```
+
+**Interpretation:**
+
+Categorical response bivariate plots are in @fig-bivariate-plots-cat.
+
+Those who exhibit symptoms of depression are about twice as likely to exhibit symptoms of alcohol dependence (10.7%) as those without symptoms of depression (5.5%) (@fig-bivariate-plots-cat-1).
+
+The likelihood of exhibiting symptoms of alcohol dependence increases with the number of drinks consumed per day (@fig-bivariate-plots-cat-2).
+
+
+---
+
+# Statistical methods
+
+## Class 07-1, Simple linear regression (separate worksheet)
+
+## Class 07-2, Simple linear regression
+
+__Rubric__
+
+1. With your previous (or new) bivariate scatter plot, add a regression line.
+    * (2 p) plot with regression line,
+    * (1 p) label axes and title.
+
+2. Use `lm()` to fit the linear regression and interpret slope and $R^2$ (R-squared) values.
+    * (2 p) lm `summary()` table is presented,
+    * (2 p) slope is interpreted with respect to a per-unit increase of the $x$ variable
+           in the context of the variables in the plot,
+    * (2 p) $R^2$ is interpretted in a sentence.
+
+3. (1 p) Interpret the intercept.  Does it make sense in the context of your study?
+
+
+### 1. Scatter plot, add a regression line.
+
+```{R}
+
+library(ggplot2)
+p <- ggplot(nesarc_sub %>% filter(DrinkExperience > 0), aes(x = Age, y = DrinkExperience))
+p <- p + theme_bw()
+p <- p + geom_jitter(width = 0.25, height = 5, alpha = 1/10)
+p <- p + stat_smooth(method = lm, colour = "red", fullrange = TRUE)
+p <- p + labs(
+     title = "Length of Heaviest Drinking Period vs Age"
+   , y = "Length in Years of Heaviest Drinking Period"
+   , caption = "Key: Red line is simple linear regression.\nFiltered to include only drinkers."
+   )
+p <- p + xlim(c(0, NA))
+print(p)
+
+```
+
+
+### 2. Fit the linear regression, interpret slope and $R^2$ (R-squared) values
+
+```{R}
+
+lm_DE_Age <-
+  lm(
+      formula = DrinkExperience ~ Age
+    , data = nesarc_sub
+  )
+summary(lm_DE_Age)
+
+```
+
+ **Slope:** For every 1 year increase in Age, we expect an increase of `r  lm_DE_Age$coefficients[2] %>% signif(3)` years in the period of heaviest drinking.
+
+**$R^2$:** The proportion of variance explained by the regression model, compared to the grand mean, is $R^2$ = `r summary(lm_DE_Age)$r.squared %>% signif(2)`, which is very small.
+
+
+### 3. Interpret the intercept.  Does it make sense?
+
+**Intercept:** For someone 0 years old, the expected number of years of heaviest drinking is `r  lm_DE_Age$coefficients[1] %>% signif(3)` years. This does not make sense since you cannot have a negative span of heaviest drinking.
+
+
+## Class 08-1, Logarithm transformation (separate worksheet)
+
+## Class 08-2, Logarithm transformation
+
+__Rubric__
+
+1. Try plotting the data on a logarithmic scale
+    * (6 p) Each of the logarithmic relationships is plotted, axes are labelled with scale.
+    1. original scales
+    2. $\log(x)$-only
+    3. $\log(y)$-only
+    4. both $\log(x)$ and $\log(y)$
+
+2. What happened to your data when you transformed it?
+    * (2 p) Describe what happened to the relationship after each log transformation (compare transformed scale to original scale; is the relationship more linear, more curved?).
+    * (1 p) Choose the best scale for a linear relationship and explain why.
+    * (1 p) Does your relationship benefit from a logarithmic transformation?  Say why or why not.
+
+
+### 1. Try plotting on log scale (original scale, $\log(x)$-only, $\log(y)$-only, both $\log(x)$ and $\log(y)$)
+
+```{R}
+
+library(ggplot2)
+p1 <- ggplot(nesarc_sub %>% filter(DrinkExperience > 0), aes(x = Age, y = DrinkExperience))
+p1 <- p1 + theme_bw()
+p1 <- p1 + geom_point(alpha = 1/20)
+p1 <- p1 + stat_smooth(method = lm)
+p1 <- p1 + labs(
+            title = "Original scale"
+          , x = "Age"
+          , y = "Heaviest drinking period in years"
+          )
+#print(p1)
+
+library(ggplot2)
+p2 <- ggplot(nesarc_sub %>% filter(DrinkExperience > 0), aes(x = Age, y = DrinkExperience))
+p2 <- p2 + theme_bw()
+p2 <- p2 + geom_point(alpha = 1/20)
+p2 <- p2 + stat_smooth(method = lm)
+p2 <- p2 + scale_x_log10()
+p2 <- p2 + labs(
+            title = "Log(x)"
+          , x = "Age"
+          , y = "Heaviest drinking period in years"
+          )
+#print(p2)
+
+library(ggplot2)
+p3 <- ggplot(nesarc_sub %>% filter(DrinkExperience > 0), aes(x = Age, y = DrinkExperience))
+p3 <- p3 + theme_bw()
+p3 <- p3 + geom_point(alpha = 1/20)
+p3 <- p3 + stat_smooth(method = lm)
+p3 <- p3 + scale_y_log10()
+p3 <- p3 + labs(
+            title = "Log(y)"
+          , x = "Age"
+          , y = "Heaviest drinking period in years"
+          )
+#print(p3)
+
+library(ggplot2)
+p4 <- ggplot(nesarc_sub %>% filter(DrinkExperience > 0), aes(x = Age, y = DrinkExperience))
+p4 <- p4 + theme_bw()
+p4 <- p4 + geom_point(alpha = 1/20)
+p4 <- p4 + stat_smooth(method = lm)
+p4 <- p4 + scale_x_log10()
+p4 <- p4 + scale_y_log10()
+p4 <- p4 + labs(
+            title = "Log(x) and Log(y)"
+          , x = "Age"
+          , y = "Heaviest drinking period in years"
+          )
+#print(p4)
+
+```
+
+
+
+### 2. What happened to your data when you transformed it?
+
+* Describe what happened to the relationship after each log transformation (compare transformed scale to original scale).
+
+* Choose the best scale for a linear relationship and explain why.
+
+* Does your relationship benefit from a logarithmic transformation?  Say why or why not.
+
+
+## Class 09, Correlation (separate worksheet)
+
+## Class 10, Categorical contingency tables (separate worksheet)
+
+## Class 11, Correlation and Categorical contingency tables
+
+__Rubric__
+
+1. With your previous (or a new) bivariate scatter plot, calculate the correlation and interpret.
+    * (1 p) plot is repeated here or the plot is referenced an easy to find from a plot above,
+    * (1 p) correlation is calculated,
+    * (2 p) correlation is interpretted (direction, strength of LINEAR relationship).
+
+2. With your previous (or a new) two- or three-variable categorical plot, calculate conditional proportions and interpret.
+    * (1 p) frequency table of variables is given,
+    * (2 p) conditional proportion tables are calculated of the outcome variable conditional on one or two other variables,
+    * (1 p) a well-labelled plot of the proportion table is given,
+    * (2 p) the conditional proportions are interpretted and compared between conditions.
+
+### Correlation
+
+```{R}
+
+library(ggplot2)
+p2 <- ggplot(nesarc_sub, aes(x = Age_log, y = DrinkExperience))
+p2 <- p2 + theme_bw()
+p2 <- p2 + geom_point(alpha = 1/20)
+p2 <- p2 + stat_smooth(method = lm)
+p2 <- p2 + labs(
+            title = "Drink Experience vs Log2 Age"
+          , x = "Log2 Age"
+          , y = "Heaviest drinking period in years"
+          )
+print(p2)
+
+```
+
+```{R}
+
+cor_A_D <-
+  cor(
+      nesarc_sub$Age_log
+    , nesarc_sub$DrinkExperience
+    , use = "complete.obs"
+  )
+cor_A_D
+
+```
+
+
+
+### Interpretation of correlation
+
+The correlation is 0.32. This is a positive, moderately weak linear relationship between `Age_log` and `DrinkExperience`, meaning that as people get older, their longest period of heaviest drinking tends to increase slightly.
+
+
+### Contingency table
+
+```{R}
+
+tab_S_D_D <-
+  nesarc_sub %>%
+  group_by(
+    Sex
+  , Depression
+  , DrinkDependence
+  ) %>%
+  summarise(
+    Frequency = n()
+  ) %>%
+  mutate(
+    Proportion = round(Frequency / sum(Frequency), 3)
+  ) %>%
+  ungroup()
+
+tab_S_D_D %>%
+  knitr::kable()
+
+```
+
+```{R, fig.height = 5, fig.width = 10}
+
+library(ggplot2)
+p <- ggplot(data = tab_S_D_D, aes(x = Depression, y = Proportion, fill = forcats::fct_rev(DrinkDependence)))
+p <- p + theme_bw()
+p <- p + geom_hline(yintercept = c(0, 1), alpha = 1/4)
+p <- p + geom_bar(stat="identity")
+p <- p + labs(
+    title = "Proportion of Alcohol Dependence by Depression Symptoms\nfor each Gender"
+  , y = "Proportion of Alcohol Dependence"
+  , fill = "Alcohol Dependence"
+  )
+p <- p + scale_y_continuous(limits = c(0, 1))
+p <- p + facet_wrap(~ Sex)
+p <- p + theme(legend.position = "bottom")
+print(p)
+
+```
+
+
+### Interpretation of conditional proportions
+
+* For Males with depression, the proportion who exhibit alcohol dependence is 0.165. For those without depression, the proportion is 0.081 (about half).
+
+* For Females with depression, the proportion who exhibit alcohol dependence is 0.077. For those without depression, the proportion is 0.032 (less than half).
+
+Both Males and Females are about twice as likely to develop alcohol dependence if they are depressed compared to if they are not depressed.
+
+
+## Class 12-1, Parameter estimation (one-sample) (separate worksheet)
+
+## Class 12-2, Inference and Parameter estimation (one-sample)
+
+__Rubric__
+
+1. Using a numerical variable, calculate and interpret a confidence interval for the population mean.
+    * (1 p) Identify and describe the variable,
+    * (1 p) use `t.test()` to calculate the mean and confidence interval, and
+    * (1 p) interpret the confidence interval.
+    * (2 p) Using plotting code from the last two classes, plot the data, estimate, and confidence interval in a single well-labelled plot.
+
+2. Using a two-level categorical variable, calculate and interpret a confidence interval for the population proportion.
+    * (1 p) Identify and describe the variable,
+    * (1 p) use `binom.test()` to calculate the mean and confidence interval, and
+    * (1 p) interpret the confidence interval.
+    * (2 p) Using plotting code from the last two classes, plot the data, estimate, and confidence interval in a single well-labelled plot.
+
+### Numeric variable confidence interval for mean $\mu$
+
+
+
+### Categorical variable confidence interval for proportion $p$
+
+
+
+## Class 13, Hypothesis testing (one- and two-sample) (separate worksheet)
+
+## Class 14, Paired data, assumption assessment (separate worksheet)
+
+## Class 15, Hypothesis testing (one- and two-sample)
+
+### Mechanics of a hypothesis test (review)
+
+1. Set up the __null and alternative hypotheses__ in words and notation.
+    * In words: ``The population mean for [what is being studied] is different from [value of $\mu_0$].''
+      (Note that the statement in words is in terms of the alternative hypothesis.)
+    * In notation: $H_0: \mu=\mu_0$ versus $H_A: \mu \ne \mu_0$
+      (where $\mu_0$ is specified by the context of the problem).
+
+2. Choose the __significance level__ of the test, such as $\alpha=0.05$.
+
+3. Compute the __test statistic__, such as $t_{s} = \frac{\bar{Y}-\mu_0}{SE_{\bar{Y}}}$, where $SE_{\bar{Y}}=s/\sqrt{n}$ is the standard error.
+
+4. Determine the __tail(s)__ of the sampling distribution where the __$p$-value__ from the test statistic will be calculated
+(for example, both tails, right tail, or left tail).
+(Historically, we would compare the observed test statistic, $t_{s}$,
+with the __critical value__ $t_{\textrm{crit}}=t_{\alpha/2}$
+in the direction of the alternative hypothesis from the
+$t$-distribution table with degrees of freedom $df = n-1$.)
+
+5. State the __conclusion__ in terms of the problem.
+    * Reject $H_0$ in favor of $H_A$ if $p\textrm{-value} < \alpha$.
+    * Fail to reject $H_0$ if $p\textrm{-value} \ge \alpha$.
+    (Note: We DO NOT _accept_ $H_0$.)
+
+6. __Check assumptions__ of the test (for now we skip this).
+
+
+### What do we do about "significance"?
+
+Adapted from **[Significance Magazine](https://rss.onlinelibrary.wiley.com/doi/10.1111/j.1740-9713.2019.01295.x)**.
+
+Recent calls have been made to abandon the term "statistical significance".
+The American Statistical Association (ASA) issued its
+  [statement](https://www.tandfonline.com/doi/pdf/10.1080/00031305.2016.1154108) and
+  [recommendation](https://www.tandfonline.com/doi/full/10.1080/00031305.2019.1583913)
+  on p-values (see the [special issue of p-values](https://www.tandfonline.com/toc/utas20/73/sup1?nav=tocList) for more).
+
+In summary, the problem of "significance" is one of misuse, misunderstanding, and misinterpretation.
+The recommendation in this class is that it is no longer sufficient to say that a
+  result is "statistically significant" or "non-significant"
+  depending on whether a p-value is less than a threshold.
+Instead, we will be looking for wording as in the following paragraph.
+
+"The difference between the two groups turns out to be small (8%),
+  while the probability ($p$) of observing a result at least as extreme as this
+  under the null hypothesis of no difference between the two groups
+  is $p = 0.003$ (that is, 0.3%).
+This p-value is statistically significant as it is below our pre-defined
+  threshold ($p < 0.05$).
+However, the p-value tells us only that the 8% difference between the
+  two groups is somewhat unlikely given our hypothesis and null model's assumptions.
+More research is required, or other considerations may be needed, to conclude
+  that the difference is of practical importance and reproducible."
+
+
+### Two-sample $t$-test
+
+__Rubric__
+
+1. Using a numerical response variable and a two-level categorical variable (or a categorical variable you can reduce to two levels), specify a two-sample $t$-test associated with your research questions.
+    * (2 p) Specify the hypotheses in words and notation (either one- or two-sided test),
+    * (0 p) use `t.test()` to calculate the mean, test statistic, and p-value,
+    * (3 p) state the significance level, test statistic, and p-value, and
+    * (2 p) state the conclusion in the context of the problem.
+    * (1 p) Given your conclusion, could you have committed at Type-I or Type-II error?
+    * (2 p) Provide an appropriate plot of the data and sample estimates in a well-labelled plot.
+
+**1. Null and Alternative Hypotheses**
+
+  * ``The true difference in means of drink consumption (DrinkExperience) between group Yes Manic Symptoms and group No Manic Symptoms is less than 0.''
+
+  * $H_0: \mu_{YM} - \mu_{NM} \geq 0$ versus $H_A: \mu_{YM} - \mu_{NM} < 0$
+
+```{R}
+
+t_summary_DE_M <-
+  t.test(
+      DrinkExperience ~ Mania
+    , data = nesarc_sub
+    , alternative = "less"
+  )
+t_summary_DE_M
+
+```
+
+**2. Significance level**
+
+ * Let $\alpha=0.05$, the significance level of the test and the Type-I error probability if the null hypothesis is true.
+
+**3. Test Statistic**
+
+ * $t_{s} = `r t_summary_DE_M$statistic %>% signif(3)`$
+ 
+**4. p-value**
+
+ * $p = `r t_summary_DE_M$p.value %>% signif(4)`$, this is the observed significance of the test.
+ 
+**5. Conclusion**
+
+ * Reject $H_0$ in favor of $H_A$, concluding that the population mean total of drink consumption is higher among those with mania than those without.
+ 
+ * Because we rejected the null hypothesis, we could have made a Type-I error.
+ 
+ **6. Plot and Sample Estimates**
+ 
+```{R}
+
+est_mean_DE_M <-
+  nesarc_sub %>%
+  group_by(Mania) %>%
+  summarise(DrinkExperience = mean(DrinkExperience, na.rm = TRUE)) %>%
+  ungroup()
+est_mean_DE_M
+
+```
+ 
+```{R}
+
+library(ggplot2)
+p <- ggplot(nesarc_sub, aes(x = Mania, y = DrinkExperience))
+p <- p + theme_bw()
+p <- p + geom_boxplot(width = 0.5, alpha = 0.5)
+p <- p + geom_jitter(position = position_jitter(width = 0.1), alpha = 1/4)
+p <- p + stat_summary(fun = mean, geom = "point", shape = 18, size = 6, colour = "blue", alpha = 0.8)
+p <- p + labs(
+              title = "Drink Experience by Mania"
+            , x = "Manic Status"
+            , y = "Years of longest heavy drinking period"
+            )
+print(p)
+
+```
+
+```{R}
+
+p <- ggplot(nesarc_sub, aes(x = DrinkExperience))
+p <- p + theme_bw()
+p <- p + geom_histogram(binwidth = 40)
+p <- p + geom_vline(data = est_mean_DE_M, aes(xintercept = DrinkExperience), colour = "red")
+p <- p + facet_grid(Mania ~ .)
+p <- p + labs(
+              title = "Drink Experience by Mania"
+            , x = "Manic Status"
+            , y = "Years of longest heavy drinking period"
+            )
+print(p)
+
+```
+ 
+```{R}
+
+e_plot_bs_two_samp_diff_dist(
+  nesarc_sub %>% filter(Mania == "No Manic Symptoms") %>% drop_na(DrinkExperience) %>% pull(DrinkExperience)
+, nesarc_sub %>% filter(Mania == "Yes Manic Symptoms") %>% drop_na(DrinkExperience) %>% pull(DrinkExperience)
+, N = 1000
+)
+
+```
+ 
+ 
+
+## Class 16, ANOVA, Pairwise comparisons (separate worksheet)
+
+## Class 17, ANOVA and Assessing Assumptions
+
+__Rubric__
+
+1. Using a numerical response variable and a categorical variable with three to five levels (or a categorical variable you can reduce to three to five levels), specify an ANOVA hypothesis associated with your research questions.
+    * (1 p) Specify the ANOVA hypotheses in words and notation,
+    * (1 p) plot the data in a way that is consistent with hypothesis test (comparing means, assess equal variance assumption),
+    * (1 p) use `aov()` to calculate the hypothesis test statistic and p-value,
+    * (1 p) state the significance level, test statistic, and p-value,
+    * (1 p) state the conclusion in the context of the problem,
+    * (2 p) assess the normality assumption of the residuals using appropriate methods (QQ-plot and Anderson-Darling test), and
+    * (1 p) assess the assumption of equal variance between your groups using an appropriate test (also mention standard deviations of each group).
+    * (2 p) If you rejected the ANOVA null hypothesis, perform follow-up pairwise comparisons using Tukey's HSD to indicate which groups have statistically different means and summarize the results.
+
+### Hypothesis and plot
+
+Let $\mu_j$ = population mean longest consecutive years of heaviest drinking for the five ethnicities identified in the dataset: Caucasian, African American, Native American, Asian, and Hispanic, numbered $(j=1,2,3,4,5)$ respectively.
+We wish to test $H_0: \mu_1=\cdots=\mu_5$ versus $H_A: \textrm{not } H_0$ (at least one pair of means differ).
+
+```{R}
+
+summary(nesarc_sub$Ethnicity)
+summary(nesarc_sub$DrinkExperience)
+
+```
+Plot the data in a way that compares the means.
+Error bars are 95% confidence intervals of the mean.
+
+```{R}
+#| fig-width:   3
+#| fig-height:  5
+
+# Plot the data using ggplot
+library(ggplot2)
+p <- ggplot(nesarc_sub, aes(x = Ethnicity, y = DrinkExperience))
+# plot a reference line for the global mean (assuming no groups)
+p <- p + geom_hline(yintercept = mean(nesarc_sub$c_bwt),
+                    colour = "black", linetype = "dashed", size = 0.3, alpha = 0.5)
+# boxplot, size=.75 to stand out behind CI
+p <- p + geom_violin(width = 0.5, alpha = 0.25)
+p <- p + geom_boxplot(width = 0.25, alpha = 0.25)
+# points for observed data
+p <- p + geom_point(position = position_jitter(w = 0.05, h = 0), alpha = 0.2)
+# diamond at mean for each group
+p <- p + stat_summary(fun = mean, geom = "point", shape = 18, size = 4,
+                      colour = "red", alpha = 0.8)
+# confidence limits based on normal distribution
+p <- p + stat_summary(fun.data = "mean_cl_normal", geom = "errorbar",
+                      width = .2, colour = "red", alpha = 0.8)
+p <- p + labs(title = "Drink experience by Ethnicity")
+p <- p + ylab("Longest consecutive years of heaviest drinking")
+print(p)
+```
+
+
+###(NOT USED) Transform the response variable to satisfy assumptions
+
+
+### ANOVA Hypothesis test
+
+1. Set up the __null and alternative hypotheses__ in words and notation.
+    * In words: ``The population mean drink experience is different between ethnic groups.''
+    * In notation: $H_0: \mu_1=\cdots=\mu_3$ versus $H_A: \textrm{not } H_0$ (at least one pair of means differ).
+
+2. Let the significance level of the test be $\alpha=0.05$.
+
+3. Compute the __test statistic__.
+
+```{R}
+
+aov_summary <-
+  aov(
+    DrinkExperience ~ Ethnicity
+  , data = nesarc_sub
+  )
+summary(aov_summary)
+
+```
+
+The $F$-statistic for the ANOVA is $F = `r signif(unlist(summary(aov_summary))["F value1"], 3)`$.
+
+4. Compute the __$p$-value__ from the test statistic.
+
+The p-value for testing the null hypothesis is
+  $p = `r signif(unlist(summary(aov_summary))["Pr(>F)1"], 3)`$.
+
+5. State the __conclusion__ in terms of the problem.
+
+Because $p = `r signif(unlist(summary(aov_summary))["Pr(>F)1"], 3)` < 0.05$, we must reject $H_0$ in favor of $H_A$ and conclude that at least one pair of means differ.
+
+
+### Check assumptions
+
+6. __Check assumptions__ of the test.
+  a. Residuals are normal
+  b. Populations have equal variances.
+
+* Check whether residuals are normal.
+
+- Plot the residuals and assess whether they appear normal.
+
+```{R}
+#| fig-width:   5
+#| fig-height:  4
+
+# Plot the data using ggplot
+df_res <- data.frame(res = aov_summary$residuals)
+library(ggplot2)
+p <- ggplot(df_res, aes(x = res))
+p <- p + geom_histogram(aes(y = ..density..), binwidth = 1)
+p <- p + geom_density(colour = "blue", adjust = 5)
+#p <- p + geom_rug()
+p <- p + stat_function(fun = dnorm, colour = "red", args = list(mean = mean(df_res$res), sd = sd(df_res$res)))
+p <- p + labs(title = "ANOVA Residuals"
+            , caption = "Blue = Kernal density curve\nRed = Normal distribution")
+print(p)
+```
+
+The residuals plot is highly right skewed, and thus not normal.
+
+```{R}
+#| fig-width:   5
+#| fig-height:  5
+
+# QQ plot
+par(mfrow=c(1,1))
+#library(car)
+car::qqPlot(
+    aov_summary$residuals
+  , las = 1
+  , id = list(n = 4, cex = 1)
+  , lwd = 1
+  , main="QQ Plot"
+  )
+```
+
+The QQ-plot of the residuals versus normal quantiles is U-shaped (very right skewed), and thus not normal.
+
+- A formal test of normality on the residuals tests the hypothesis
+  $H_0:$ The distribution is Normal vs
+  $H_1:$ The distribution is not Normal.
+We can test the distribution of the residuals.
+
+```{R}
+#shapiro.test(aov_summary$residuals)
+#library(nortest)
+nortest::ad.test(aov_summary$residuals)
+nortest::cvm.test(aov_summary$residuals)
+```
+
+The formal normality tests of the residuals reject $H_0$ in favor of $H_A$, concluding that the data are not normal.
+
+* Check whether populations have equal variances.
+
+- Look at the numerical summaries below.
+
+```{R}
+# calculate summaries
+dat_EthDExp_summary <-
+  nesarc_sub %>%
+  group_by(Ethnicity) %>%
+  summarize(
+    m = mean(DrinkExperience, na.rm = TRUE)
+  , s = sd(DrinkExperience, na.rm = TRUE)
+  , n = n()
+  , .groups = "drop_last"
+  ) %>%
+  ungroup()
+
+dat_EthDExp_summary
+```
+
+The standard deviations appear different between groups; in particular, the Caucasian group has a significantly higher standard deviation than the other groups.
+
+- Formal tests for equal variances.
+We can test whether the variances are equal between our three groups.
+This is similar to the ANOVA hypothesis, but instead of testing means we're tesing variances.
+$H_0: \sigma^2_1=\sigma^2_2=\sigma^2_3$
+versus $H_A: \textrm{not } H_0$ (at least one pair of variances differ).
+
+```{R}
+## Test equal variance
+# assumes populations are normal
+bartlett.test(DrinkExperience ~ Ethnicity, data = nesarc_sub)
+
+# does not assume normality, requires car package
+#library(car)
+car::leveneTest(DrinkExperience ~ Ethnicity, data = nesarc_sub)
+
+# nonparametric test
+fligner.test(DrinkExperience ~ Ethnicity, data = nesarc_sub)
+```
+
+Since the data were not normal, we will look at the Levene test. Since the p-value is less than 0.05, we reject $H_0$ (equal variances) in favor of $H_A$ (unequal variances).
+
+
+### Post Hoc pairwise comparison tests
+
+__EMM plot interpretation__
+
+This __EMM plot (Estimated Marginal Means, aka Least-Squares Means)__
+is only available when conditioning on one variable.
+The blue bars are confidence intervals for the EMMs;
+don't ever use confidence intervals for
+EMMs to perform comparisons -- they can be very misleading.
+The red arrows are for the comparisons among means;
+the degree to which the "comparison arrows" overlap reflects as much as
+possible the significance of the comparison of the two estimates.
+If an arrow from one mean overlaps an arrow from
+another group, the difference is not significant, based on the adjust setting
+(which defaults to "tukey").
+
+```{R}
+#| fig-width:   3
+#| fig-height:  5
+
+## CHDS
+# Tukey 95% Individual p-values
+#TukeyHSD(fit_c)
+
+## Contrasts
+adjust_method <- c("none", "tukey", "bonferroni")[2]
+
+library(emmeans)
+emm_cont <-
+  emmeans::emmeans(
+    aov_summary
+  , specs = "Ethnicity"
+  )
+
+# means and CIs
+emm_cont %>% print()
+
+# pairwise differences
+emm_cont %>% pairs(adjust = adjust_method) %>% print()
+
+# plot of means, CIs, and comparison arrows
+plot(
+    emm_cont
+  , comparisons = TRUE
+  , adjust = adjust_method
+  , horizontal = FALSE
+  , ylab = "Ethnicity"
+  )
+```
+
+African American, Native American, and Hispanic ethnic groups do not significantly differ from one another, but Caucasian and Asian ethnic groups both differ significantly from all other ethnic groups.
+
+* `Cauc - AfAm`:    means are significantly different
+* `Cauc - NaAm`:    means are significantly different
+* `Cauc - Asia`:    means are significantly different
+* `Cauc - Hisp`:    means are significantly different
+* `AfAm - NaAm`:    means are NOT significantly different
+* `AfAm - Asia`:    means are significantly different
+* `AfAm - Hisp`:    means are NOT significantly different
+* `NaAm - Asia`:    means are significantly different
+* `NaAm - Hisp`:    means are NOT significantly different
+* `Asia - Hisp`:    means are significantly different
+
+```{R}
+
+dat_EthDExp_summary %>% arrange(m)
+
+```
+
+Summarize results by ordering the means and grouping pairs that do not differ.
+
+ 	
+```
+
+           Ethnicity       m           s           n
+           <fctr>          <dbl>       <dbl>       <int>
+  |        Asia            3.993098    7.080555    1332	
+    |      AfAm            5.476408    8.723156    8245	
+    |      Hisp            5.479727    8.832371    8308	
+    |      NaAm            6.292398    9.767241    701	
+      |    Cauc            7.872016    11.269414   24507
+
+```
+
+
+
+## Class 18, Nonparametric methods (separate worksheet)
+
+## Class 19, Binomial and Multinomial tests (separate worksheet)
+
+## Class 20-1, Two-way categorical tables (separate worksheet)
+
+## Class 20-2, Simple linear regression (separate worksheet)
+
+## Class 21, Two-way categorical and simple linear regression
+
+__Rubric__
+
+### Two-way categorical analysis
+
+Using two categorical variables with two to five levels each, specify a hypothesis test for homogeneity of proportions associated with your research questions.
+
+* `Mania` and `Ethnicity`
+
+
+#### (1 p) Specify the hypotheses in words and notation.
+
+* In words: "There is an association between `Mania` and `Ethnicity`."
+
+* In notation: $H_0: p(i \textrm{ and } j) = p(i)p(j)$ for all row categories $i$ and column categories $j$ versus $H_A: p(i \textrm{ and } j) \ne p(i)p(j)$, for at least one row category $i$ and column category $j$.
+
+
+#### (1 p) State the conclusion of the test in the context of the problem.
+
+```{R}
+# Row: Ethnicity Column: Mania
+
+# Tabulate by two categorical variables:
+tab_Mania_Eth <-
+  xtabs(
+    ~ Ethnicity + Mania
+  , data = nesarc_sub
+  )
+tab_Mania_Eth
+
+# column proportions
+prop.table(
+    tab_Mania_Eth
+  , margin = 1
+  ) %>%
+  signif(2)
+
+# chi^2 test
+chisq_me <-
+  chisq.test(
+    tab_Mania_Eth
+  , correct = FALSE
+  )
+chisq_me
+
+```
+
+* The test statistic is $X^2 = `r chisq_me$statistic %>% signif(4)`$.
+
+* The p-value $= `r chisq_me$p.value %>% signif(3)`$.
+
+* Because `r chisq_me$p.value %>% signif(3)` < 0.05, we must reject $H_0$ in favor f $H_A$ and conclude that there is an association between Ethnicity and Mania.
+
+```{R}
+
+chisq_me$expected
+min(chisq_me$expected)
+
+```
+
+* The model assumptions are met since the expected count for each cell is at least 5.
+
+
+#### (1 p) Plot a mosaic plot of the data and Pearson residuals.
+
+```{R}
+
+chisq_me$residuals
+
+```
+
+```{R}
+#| fig-width:   10
+#| fig-height:  8
+
+# mosaic plot
+library(vcd)
+
+vcd::mosaic(
+    tab_Mania_Eth
+  , shade     = TRUE
+  , legend    = TRUE
+  , direction = "v"
+  )
+```
+
+
+#### (1 p) Interpret the mosaic plot with reference to the Pearson residuals.
+
+* Along the Yes Manic symptoms row, we see that the Caucasian group is slightly higher than expected, while the African American,
+ Hispanic, and Asian groups are all slightly lower than expected.
+ The Native American group has a very high positive Pearson residual, however. We may thus conclude that the Native American
+ group is the primary cause for rejecting $H_0$.
+
+
+### Simple linear regression
+
+Select two numerical variables.
+
+* `DrinkExperience` and `DrinkQuantity`
+
+#### (1 p) Plot the data and, if required, transform the variables so a roughly linear relationship is observed.  All interpretations will be done on this scale of the variables.
+
+```{R}
+
+library(ggplot2)
+p <- ggplot(nesarc_sub, aes(x = Age, y = DrinkQuantity))
+p <- p + geom_jitter(position = position_jitter(width = 0.1), alpha = 1/4)
+p <- p + stat_smooth(method = lm)
+p <- p + scale_y_log10()
+p <- p + labs(title = "log10(Drink Quantity) vs Age")
+p <- p+ labs(y = "log10(Drink Quantity)")
+print(p)
+
+```
+
+
+#### (0 p) Fit the simple linear regression model.
+
+
+```{R}
+# fit model
+lm_fit <-
+  lm(
+    DrinkQuantity ~ Age
+  , data = nesarc_sub
+  )
+```
+
+#### (1 p) Assess the residuals for lack of fit (interpret plots of residuals vs fitted and $x$-value).
+
+```{R}
+#| fig-width:   9
+#| fig-height:  3
+
+e_plot_lm_diagostics(
+    lm_fit
+  #, rc_mfrow    = c(1, 2)
+  , sw_plot_set = "simple"
+  )
+```
+
+
+#### (1 p) Assess the residuals for normality (interpret QQ-plot and histogram).
+
+#### (1 p) Assess the relative influence of points.
+
+#### (1 p) Test whether the slope is different from zero, $H_A: \beta_1 \ne 0$.
+
+#### (1 p) Interpret the $R^2$ value.
+
+
+## Class 22, Logistic regression (separate worksheet)
+
+## Class 23, Logistic regression
+
+__Rubric__
+
+1. Logistic regression.
+
+### Select a binary response and continue explanatory/predictor variable.
+
+### (1 p) Plot the data.
+
+* See below.
+
+### (1 p) Summarize the $\hat{p}$ values for each value of the $x$-variable.  Also, calculate the empirical logits.
+
+Summarize observed probability of dependency
+  for each quantity of drinks consumed per day.
+
+```{R}
+dat_drinkexp_depend_sum <-
+  nesarc_sub %>%
+  group_by(
+    DrinkQuantity_Drinkers_log2
+  ) %>%
+  summarize(
+    Success = sum(DrinkDependence01)
+  , Total   = n()
+  # estimated proportion of preg for each age group
+  , p_hat   = Success / Total
+  , .groups = "drop_last"
+  ) %>%
+  ungroup() %>%
+  na.omit()
+
+dat_drinkexp_depend_sum %>% print(n=Inf)
+```
+
+
+### (1 p) Plot the $\hat{p}$ values vs the $x$-variable and plot the empirical logits vs the $x$-variable.
+
+#### Probability/proportion scale
+
+```{R}
+#| fig-width:   8
+#| fig-height:  6
+
+library(ggplot2)
+p1 <- ggplot(nesarc_sub, aes(x = DrinkQuantity_Drinkers_log2, y = DrinkDependence01))
+p1 <- p1 + theme_bw()
+# data
+p1 <- p1 + geom_jitter(width = 0.25, height = 0.025, size = 0.5, alpha = 1/10, colour = "green")
+# summaries
+p1 <- p1 + geom_point(data = dat_drinkexp_depend_sum, aes(x = DrinkQuantity_Drinkers_log2, y = p_hat, size = Total))
+p1 <- p1 + geom_smooth(data = dat_drinkexp_depend_sum, aes(x = DrinkQuantity_Drinkers_log2, y = p_hat,weight = Total), se = FALSE, colour = "red")  # just for reference
+# axes
+p1 <- p1 + scale_y_continuous(breaks = seq(0, 1, by = 0.2))
+p1 <- p1 + expand_limits(y = c(0, 1))
+#p1 <- p1 + scale_x_continuous(breaks = seq(0, 100, by = 2))
+# labels
+p1 <- p1 + labs(
+    title   = "Proportion of Alcohol Dependence by log2 Drinks per Day"
+  , subtitle= "Observed data"
+  , x       = "log 2 Drinks per day during period of heaviest drinking"
+  , y       = "Dependence Symptoms (0/1)\nObserved probability of alcohol dependence"
+  , caption = paste(
+                "Green = Indicator points of dependence symptoms (1) or not (0)."
+              , "Black = Observed proportions of dependence symptoms given log2 drinks per day"
+              , "Red = Smoothed curve to proportions"
+              , sep = "\n" # separate by new lines
+              )
+  )
+print(p1)
+```
+
+#### Logit scale
+
+```{R}
+#| fig-width:   6
+#| fig-height:  4
+
+# emperical logits
+dat_drinkexp_depend_sum <-
+  dat_drinkexp_depend_sum %>%
+  mutate(
+    emp_logit = log((p_hat + 0.5/Total) / (1 - p_hat + 0.5/Total))
+  )
+
+# plot on logit scale
+library(ggplot2)
+p1 <- ggplot(dat_drinkexp_depend_sum, aes(x = DrinkQuantity_Drinkers_log2, y = emp_logit))
+p1 <- p1 + theme_bw()
+
+# summaries
+p1 <- p1 + geom_point(aes(size = Total))
+p1 <- p1 + stat_smooth(aes(weight = Total), method = "lm", se = FALSE, linetype = 3)  # just for reference
+p1 <- p1 + geom_smooth(aes(weight = Total), se = FALSE, colour = "red")  # just for reference
+
+# axes
+#p1 <- p1 + scale_y_continuous(breaks = seq(-10, 10, by = 0.5))
+#p1 <- p1 + scale_x_continuous(breaks = seq(0, 100, by = 2))
+# labels
+p1 <- p1 + labs(
+    title   = "Logit of alcohol dependency by log2 Drinks per day"
+  , subtitle= "Observed data for drinkers only"
+  , x       = "log2 Drinks per day during period of heaviest drinking"
+  , y       = "Empirical logit of the probability of alcohol dependency"
+  , caption = paste(
+                "Black = Observed logit proportions of dependency given log2 drinks per day"
+              , "Blue = Naive LM fit of logit proportions"
+              , "Red = Loess smooth curve of empirical logits"
+              , sep = "\n" # separate by new lines
+              )
+  )
+print(p1)
+```
+
+### (1 p) Describe the logit-vs-$x$ plot.  Is it linear?  If not, consider a transformation of $x$ to improve linearity; describe the transformation you chose if you needed one.
+
+* The original logit-vs-$x$ plot was not linear. However, taking the log2 of drinks per day increased
+ linearity. A straight line describes the data well from 3 to 5.5, but does not fit the data well when
+ x is 6 or greater.
+
+### (1 p) Fit the `glm()` model and assess the deviance lack-of-fit test.
+
+#### Fit the model.
+
+```{R}
+# For our summarized data (with frequencies and totals for each age)
+# The left-hand side of our formula binds two columns together with cbind():
+#   the columns are the number of "successes" and "failures".
+# For logistic regression with logit link we specify family = binomial,
+#   where logit is the default link function for the binomial family.
+
+glm_drinkexp_depend <-
+  glm(
+    cbind(Success, Total - Success) ~ DrinkQuantity_Drinkers_log2
+  , family = binomial
+  , data   = dat_drinkexp_depend_sum
+  )
+```
+
+#### Deviance statistic for lack-of-fit
+
+```{R}
+# Test residual deviance for lack-of-fit (if > 0.10, little-to-no lack-of-fit)
+glm_drinkexp_depend$deviance
+glm_drinkexp_depend$df.residual
+dev_p_val <- 1 - pchisq(glm_drinkexp_depend$deviance, glm_drinkexp_depend$df.residual)
+dev_p_val
+```
+
+* $H_0:$ the model fits the data versus $H_A:$ the model does not fit the data.
+
+* D = 33 with
+
+* 32 df, giving
+
+* p-value = 0.42
+
+* Because the p-value is greater than 0.05, we fail to reject $H_0$, concluding that
+ the model does fit the data.
+
+### (1 p) Calculate the confidence bands around the model fit/predictions. Plot on both the logit and $\hat{p}$ scales.
+
+```{R}
+# predict() uses all the Load values in dataset, including appended values
+fit_logit_pred <-
+  predict(
+    glm_drinkexp_depend
+  , data.frame(DrinkQuantity_Drinkers_log2 = dat_drinkexp_depend_sum$DrinkQuantity_Drinkers_log2)
+  , type   = "link"
+  , se.fit = TRUE
+  ) %>%
+  as_tibble()
+
+# put the fitted values in the data.frame
+dat_drinkexp_depend_sum <-
+  dat_drinkexp_depend_sum %>%
+  mutate(
+    # logit scale values
+    fit_logit       = fit_logit_pred$fit
+  , fit_logit_se    = fit_logit_pred$se.fit
+  , fit_logit_lower = fit_logit - 1.96 * fit_logit_se
+  , fit_logit_upper = fit_logit + 1.96 * fit_logit_se
+  # proportion scale values
+  , fit_p           = exp(fit_logit) / (1 + exp(fit_logit))
+  , fit_p_lower     = exp(fit_logit_lower) / (1 + exp(fit_logit_lower))
+  , fit_p_upper     = exp(fit_logit_upper) / (1 + exp(fit_logit_upper))
+  )
+```
+
+#### Logit scale
+
+```{R}
+#| fig-width:   6
+#| fig-height:  4
+
+# plot on logit scale
+library(ggplot2)
+p1 <- ggplot(dat_drinkexp_depend_sum, aes(x = DrinkQuantity_Drinkers_log2, y = emp_logit))
+p1 <- p1 + theme_bw()
+
+# MODEL FIT
+# predicted curve and point-wise 95% CI
+p1 <- p1 + geom_ribbon(aes(x = DrinkQuantity_Drinkers_log2, ymin = fit_logit_lower, ymax = fit_logit_upper), fill = "blue", linetype = 1, alpha = 0.2)
+p1 <- p1 + geom_line(aes(x = DrinkQuantity_Drinkers_log2, y = fit_logit), colour = "blue", size = 1)
+# fitted values
+p1 <- p1 + geom_point(aes(y = fit_logit), colour = "blue", size = 2)
+
+# summaries
+p1 <- p1 + geom_point(aes(size = Total))
+
+# axes
+p1 <- p1 + scale_y_continuous(breaks = seq(-10, 10, by = 0.5))
+p1 <- p1 + scale_x_continuous(breaks = seq(0, 100, by = 2))
+# labels
+p1 <- p1 + labs(
+    title   = "Logit of alcohol dependence by log2 Drinks per day"
+  , subtitle= "Logistic model fit"
+  , x       = "log2 Drinks per day during period of heaviest drinking"
+  , y       = "Logit scale of the probability alcohol dependence"
+  , caption = paste(
+                "Black = Observed logit proportions of alcohol dependence given log2 drinks per day"
+              , "Blue = Logistic model fitted logit proportions"
+              , sep = "\n" # separate by new lines
+              )
+  )
+print(p1)
+```
+
+#### Probability/proportion scale
+
+```{R}
+#| fig-width:   8
+#| fig-height:  6
+
+# plot on probability scale
+library(ggplot2)
+p1 <- ggplot(nesarc_sub, aes(x = DrinkQuantity_Drinkers_log2, y = DrinkDependence01))
+p1 <- p1 + theme_bw()
+# data
+p1 <- p1 + geom_jitter(width = 0.25, height = 0.025, size = 0.5, alpha = 1/10, colour = "green")
+# summaries
+p1 <- p1 + geom_point(data = dat_drinkexp_depend_sum, aes(x = DrinkQuantity_Drinkers_log2, y = p_hat, size = Total))
+
+# MODEL FIT
+# predicted curve and point-wise 95% CI
+p1 <- p1 + geom_ribbon(data = dat_drinkexp_depend_sum, aes(x = DrinkQuantity_Drinkers_log2, y = fit_p, ymin = fit_p_lower, ymax = fit_p_upper), fill = "blue", linetype = 1, alpha = 0.2)
+p1 <- p1 + geom_line(data = dat_drinkexp_depend_sum, aes(x = DrinkQuantity_Drinkers_log2, y = fit_p), colour = "blue", size = 1)
+# fitted values
+p1 <- p1 + geom_point(data = dat_drinkexp_depend_sum, aes(y = fit_p), colour = "blue", size = 2)
+
+# axes
+p1 <- p1 + scale_y_continuous(breaks = seq(0, 1, by = 0.2))
+p1 <- p1 + expand_limits(y = c(0, 1))
+p1 <- p1 + scale_x_continuous(breaks = seq(0, 100, by = 2))
+# labels
+p1 <- p1 + labs(
+    title   = "Proportion of alcohol dependency by log2 Drinks consumed per day"
+  , subtitle= "Logistic model fit"
+  , x       = "log2 Drinks consumed per day during period of heaviest drinking"
+  , y       = "Alcohol dependency (0/1)\nObserved probability of dependency"
+  , caption = paste(
+                "Green = Indicator points of at alcohol dependency (1) or not (0)."
+              , "Black = Observed proportions of alcohol dependency given log2 drinks per day"
+              , "Blue = Logistic model fitted proportions"
+              , sep = "\n" # separate by new lines
+              )
+  )
+print(p1)
+```
+
+### (1 p) Interpret the sign ($+$ or $-$) of the slope parameter and test whether the slope is different from zero, $H_A: \beta_1 \ne 0$.
+
+The summary table gives MLEs and standard errors for the regression parameters.
+The z-value column is the parameter estimate divided by its standard error.
+The p-values are used to test whether the corresponding parameters of the
+logistic model are zero.
+
+```{R}
+summary(glm_drinkexp_depend)
+  # see names(summary(glm_drinkexp_depend)) to find the object that has the coefficients.
+  # can also use coef(glm_drinkexp_depend)
+```
+
+#### Interpret the sign ($+$ or $-$) of the slope
+
+* The positive slope indicates that as drinks per day increases, the probability of alcohol dependence increases.
+
+#### Hypothesis test
+
+* $H_0:\beta_1 = 0$ versus $H_A: \beta_1 \ne 0$
+
+* $\beta_1 = `r coef(glm_drinkexp_depend)[2] %>% signif(2)`$
+
+* Since the p-value = $`r summary(glm_drinkexp_depend)$coefficients[2,4] %>% signif(3)` < 0.05$, we must reject $H_0$ and conclude that the slope is not equal to 0.
+
+---
+
+# Poster
+
+## Classes 24, 25, and 26: Poster Preparation
+
+### Class 24, Poster Preparation, research questions, data sources, analyses
+
+See items under Class 26.
+
+From the list in Class 26, complete Items 2, 3, 4, and 5.
+
+### Class 25, Poster Preparation, literature review, references, discussion, future work
+
+See items under Class 26.
+
+From the list in Class 26, complete Items 1, 6, 7, and 8.
+
+Citation help is available at this page:
+  <https://quarto.org/docs/authoring/footnotes-and-citations.html>
+
+
+### Class 26, Poster Preparation, complete content
+
+
+__Rubric__
+
+Organize the content of your poster.
+
+Complete the content for each of these sections:
+
+__Title__: Mania has complex associations with heavy drinking and ethnicity
+
+1. __Introduction__
+
+* Length of heavy drink consumption is negatively associated with manic symptoms.
+
+  - This study on psychiatric patients exhibiting symptoms of type I bipolar disorder, manic or mixed, found that patients hospitalized for mania
+    were associated with a period of recovery from alcohol abuse. [@10.1001/archpsyc.62.8.851]
+
+* There is an association between manic symptoms and ethnicity.
+
+  - This British study found "either genuine ethnic differences in the presentation of severe affective disorder or ... the failure of British doctors
+    to detect depression". [@kirov_murray_1999]
+
+2. __Research Questions__
+
+* Is the population mean length of heavy drink consumption less for people with manic symptoms than for those without manic symptoms?
+
+* Is there an association between reported manic symptoms and ethnicity?
+
+3. __Methods__
+
+* Data source
+
+  * An extensive battery of questions addressing present and past alcohol consumption, alcohol use disorders (AUDs), and questions that
+    operationalized the criteria set forth in the American Psychiatric Association’s Diagnostic and Statistical Manual of Mental Disorders, Fourth
+    Edition (DSM–IV) for five mood disorders, including hypomania.
+  
+  * We focus on drinkers.
+
+  * The study's oversampling of Blacks and Hispanics as well as the inclusion of Hawaii and Alaska in its sampling frame yielded enough minority
+    respondents to make NESARC an ideal vehicle for addressing the critical issue of race and/or ethnic disparities in comorbidity and access to
+    health care services.
+
+* Variables
+
+  * Duration (years) of period of heaviest drinking (`DrinkExperience` = consecutive years of drinking during heaviest period)
+  
+  * Had 1+ week period irritable/easily annoyed that caused you to shout/break things/start fights or arguments (`Mania`, 0=No, 1=Yes)
+  
+  * Imputed race/ethnicity (`Ethnicity`, 1=White, Not Hispanic or Latino, 2=Black, Not Hispanic or Latino, 3=American Indian/Alaska Native, Not
+    Hispanic or Latino, 4=Asian/Native Hawaiian/Pacific Islander, Not Hispanic or Latino, 5=Hispanic or Latino)
+
+* Statistical methods used to answer the research questions
+
+  * A two-sample $t$-test comparing duration of period of heaviest drinking by manic symptoms.
+  
+  * A $\chi^2$ analysis of a two-way categorical analysis of manic symptoms by ethnicity.
+
+4. __Research Question 1__
+
+* Is the population mean length of heavy drink consumption (`DrinkExperience`) less for people with manic symptoms than for those without manic symptoms
+  (`Mania`)?
+  That is, $H_0: \mu_{YM} = \mu_{NM}$ versus $H_A: \mu_{YM} < \mu_{NM}$
+  
+* In Figure @fig-poster_analy_one-1, the distribution of years of longest heavy drinking period is heavily right skewed,
+  and the mean of those without mania is higher (`r t_summary_DE_M$estimate[2] %>% signif(2)`)
+  than that of those with mania (`r t_summary_DE_M$estimate[1] %>% signif(2)`).
+
+* In Figure @fig-poster_analy_one-2, the bootstrap sampling distribution of the difference in means is close to normal
+  (bottom panel), so the model assumptions are met and we can rely on the results.
+ 
+* Our one-sided two-sample t-test resulted in a large test statistic ($t_{s} = `r t_summary_DE_M$statistic %>% signif(3)`$).
+  Thus, based on our p-value ($p = `r t_summary_DE_M$p.value %>% signif(4)`$) < 0.05, we reject $H_0$ in favor of $H_A$
+  and conclude that the population mean length of heavy drink consumption is higher among those without manic symptoms than those with manic symptoms.
+
+```{R}
+#| echo: false
+
+t_summary_DE_M <-
+  t.test(
+      DrinkExperience ~ Mania
+    , data = nesarc_sub
+    , alternative = "less"
+  )
+# t_summary_DE_M
+
+```
+
+```{R}
+#| echo: false
+#| warning: false
+#| label: fig-poster_analy_one
+#| fig-cap: Total drink consumption is higher among those without mania than those with mania
+#| fig-subcap:
+#|   - "Samples are right skewed"
+#|   - "Model assumptions: sampling distribution of the mean is normal"
+#| layout: [49, -2, 49] #puts 2 on one row with a 10% width space between #| layout-ncol: 1 # one column for plots   # alternatively,
+#| fig-width:   5
+#| fig-height:  4
+
+library(ggplot2)
+p <- ggplot(nesarc_sub, aes(x = Mania, y = DrinkExperience))
+p <- p + theme_bw()
+p <- p + geom_boxplot(width = 0.5, alpha = 0.5)
+p <- p + geom_jitter(position = position_jitter(width = 0.1), alpha = 1/4)
+p <- p + stat_summary(fun = mean, geom = "point", shape = 18, size = 6, colour = "blue", alpha = 0.8)
+p <- p + labs(
+              title = "Drink Experience by Mania"
+            , x = "Manic Status"
+            , y = "Years of longest heavy drinking period"
+            )
+print(p)
+
+
+e_plot_bs_two_samp_diff_dist(
+  nesarc_sub %>% filter(Mania == "No Manic Symptoms") %>% drop_na(DrinkExperience) %>% pull(DrinkExperience)
+, nesarc_sub %>% filter(Mania == "Yes Manic Symptoms") %>% drop_na(DrinkExperience) %>% pull(DrinkExperience)
+, N = 1000
+)
+
+```
+
+5. __Research Question 2__
+
+* Is there is an association between manic symptoms (`Mania`) and `Ethnicity`?
+  That is, $H_0: p(i \textrm{ and } j) = p(i)p(j)$ for all row categories $i$ and column categories $j$ versus
+  $H_A: p(i \textrm{ and } j) \ne p(i)p(j)$, for at least one row category $i$ and column category $j$.
+
+* In @fig-poster_analy_two, along the Yes Manic symptoms row, we see that the Caucasian group is slightly higher than expected, while the African
+  American, Hispanic, and Asian groups are all slightly lower than expected. The Native American group has a very high positive Pearson residual,
+  however, and will likely be the primary cause for rejecting $H_0$.
+  
+* The expected count for each cell (minimum `r chisq_me$expected[3] %>% signif(2)`) is greater than 5, so model assumptions have been met.
+
+* Our two-way categorical analysis yielded a large test statistic ($X^2 = `r chisq_me$statistic %>% signif(4)`$).
+  Thus, based on our p-value ($`r chisq_me$p.value %>% signif(3)`$) < 0.05,  we must reject $H_0$ in favor of $H_A$ and conclude that there is an
+  association between Ethnicity and manic symptoms.
+
+```{R}
+#| echo: false
+
+# Row: Ethnicity Column: Mania
+
+# Tabulate by two categorical variables:
+tab_Mania_Eth <-
+  xtabs(
+    ~ Ethnicity + Mania
+  , data = nesarc_sub
+  )
+#tab_Mania_Eth
+
+# column proportions
+# prop.table(
+#     tab_Mania_Eth
+#   , margin = 1
+#   ) %>%
+#   signif(2)
+
+# chi^2 test
+chisq_me <-
+  chisq.test(
+    tab_Mania_Eth
+  , correct = FALSE
+  )
+#chisq_me
+
+```
+
+```{R}
+#| echo: false
+#| warning: false
+#| label: fig-poster_analy_two
+#| fig-cap: Association between Ethnicity and Mania
+#| fig-width:   10
+#| fig-height:  8
+
+# mosaic plot
+library(vcd)
+
+vcd::mosaic(
+    tab_Mania_Eth
+  , abbreviate_labs = 3
+  , rot_labels = c(90, 0, 0, 0)
+  , just_labels = c("center", "right")
+  , offset_varnames = c(1, 0, 0, 2)
+  , shade     = TRUE
+  , legend    = TRUE
+  , direction = "v"
+  )
+
+#chisq_me$expected
+
+```
+
+6. __Discussion__
+    
+* Research question 1 results agree with previous studies that people exhibiting manic symptoms are less likely
+  to maintain long periods of heavy drinking than those who do not exhibit manic symptoms. This supports the view
+  that treatment for mania can inhibit long term alcohol abuse.
+
+* Research question 2 results agree with previous studies that have suggested that either ethnicity plays a role in
+  presenting manic symptoms, or there is an ethnic bias to the way mania is diagnosed by doctors.
+
+7. __Future work__
+    
+* If appropriate treatment for mania can help address alcohol abuse as well, properly diagnosing mania should be
+  a priority. However, it may be that mania is not diagnosed properly in all cases. More research needs to be done
+  on the relationship between ethnicity and affective disorder diagnoses, and in the pursuit of health care equality
+  we should examine the relationship between affective disorders and economic status as well.
+
+8. __References__
+
+
+__References__
+
+_References are supposed to appear here, but they may appear at the end of the document._
+
+:::{#refs}
+:::
+
+
+
+## Class 27, Poster Preparation, into poster template
+
+* <https://github.com/brentthorne/posterdown>
+
+```{R}
+
+# For poster, save enviroment (all data, not packages)
+
+save.image(file = "ADA1.RData")
+
+```
+
+
+## Class 28, Poster Preparation, reviewed by instructor
+
+## Class 29, Poster Presentations
+
+* Graduate students.
+
+## Class 30, Poster Presentations
+
+* Undergraduate students.
+
+[End]
